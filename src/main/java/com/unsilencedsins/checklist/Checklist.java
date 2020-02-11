@@ -10,11 +10,13 @@ public class Checklist {
     private ArrayList<Task> tasks;
     private ItemStack face;
     private String name;
+    private int uniqueId;
 
     public Checklist(){
         tasks = new ArrayList<Task>();
         face = new ItemStack(Material.AIR);
         name = "";
+        uniqueId = -1;
     }
 
     public Checklist(String name, ItemStack face, ArrayList<Task> tasks){
@@ -39,4 +41,9 @@ public class Checklist {
         tasks.add(newTask);
     }
 
+    public int getUniqueId() {return uniqueId;}
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 }

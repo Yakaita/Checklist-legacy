@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -20,10 +21,13 @@ public class CommandsClass implements CommandExecutor {
         Player player = (Player) sender;
 
         if (command.getName().equalsIgnoreCase("checklists")) {
+
+            ArrayList<Checklist> lists = new ArrayList<Checklist>();
+
             if (Main.getInstance().getGuisFile().getConfig().contains("player." + player.getUniqueId())) {
                 //they have done the command before, get their info
 
-                ArrayList<Checklist> lists = new ArrayList<Checklist>();
+
                 final int[] listIndex = {1};
 
                 Main.getInstance().getGuisFile().getConfig().getConfigurationSection("players." + player.getUniqueId()).getKeys(false).forEach(p -> {
@@ -37,9 +41,12 @@ public class CommandsClass implements CommandExecutor {
                     //set the list face
                     ItemStack face = new ItemStack((Material) Main.getInstance().getGuisFile().getConfig().get("players." + player.getUniqueId() + ".list" + listIndex[0] + ".face"));
                     ItemMeta meta = face.getItemMeta();
-                    meta.setDisplayName(ChatColor.BLUE + list.getName());
+                    meta.setDisplayName(ChatColor.DARK_AQUA + list.getName());
                     face.setItemMeta(meta);
                     list.setFace(face);
+
+                    //set the list uniqueId
+                    list.setUniqueId(Main.getInstance().getGuisFile().getConfig().getInt("players." + player.getUniqueId() + ".list" + listIndex[0] + ".uniqueId"));
 
                     //get the tasks
                     for (int item = 2; item < Main.getInstance().getGuisFile().getConfig().getConfigurationSection("players." + player.getUniqueId() + ".list" + listIndex[0]).getKeys(false).toArray().length; item++) {
@@ -81,6 +88,8 @@ public class CommandsClass implements CommandExecutor {
                         taskIndex++;
                     }
 
+                    taskIndex = 0;
+                    lists.add(list);
                     listIndex[0]++;
                 });
 
@@ -89,6 +98,8 @@ public class CommandsClass implements CommandExecutor {
 
                 Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId(), player.getUniqueId());
             }
+
+            player.openInventory(new ListsInventory(player, lists).getInventory());
         }
 
 
