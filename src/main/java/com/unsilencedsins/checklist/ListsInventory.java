@@ -16,9 +16,10 @@ public class ListsInventory extends HartInventory {
     Player player;
     ArrayList<Checklist> lists;
     ItemStack createList;
+
     //to be used later
-    //ItemStack lastPage;
-    //ItemStack nextPage;
+    ItemStack lastPage;
+    ItemStack nextPage;
 
 
     @Override
@@ -36,8 +37,20 @@ public class ListsInventory extends HartInventory {
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GREEN + "Create new list");
         createList.setItemMeta(meta);
 
-        //create the last page item
-        //lastPage = new ItemStack(Material.)
+        //create the last page item //to be used later
+        lastPage = new ItemStack(Material.ARROW);
+        meta = lastPage.getItemMeta();
+        meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GRAY + "Previous Page");
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.LIGHT_PURPLE + "Current Page: " + page);
+        meta.setLore(lore);
+        lastPage.setItemMeta(meta);
+
+        nextPage = new ItemStack(Material.ARROW);
+        meta = nextPage.getItemMeta();
+        meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GRAY + "Next Page");
+        meta.setLore(lore);
+        nextPage.setItemMeta(meta);
     }
 
     @Override
@@ -46,13 +59,13 @@ public class ListsInventory extends HartInventory {
 
         //set the bottom row of options
         inv.setItem(49, createList);
-        //inv,setItem(51, nextPage) //to be used later
-        //inv.setItem(47, lastPage) //to be used later
+        inv.setItem(51, nextPage); //to be used later
+        inv.setItem(47, lastPage); //to be used later
 
         //set the different lists
-        for(Checklist list : lists){
+        for (Checklist list : lists) {
             //limit to 45 lists until I do pages.
-            if(list.getUniqueId() < 45) inv.setItem(list.getUniqueId(), list.getFace());
+            if (list.getUniqueId() < 45) inv.setItem(list.getUniqueId(), list.getFace());
         }
 
         return inv;
@@ -61,5 +74,8 @@ public class ListsInventory extends HartInventory {
     @Override
     public void onClick(InventoryClickEvent e) {
 
+        if (e.getCurrentItem().equals(createList)) {
+
+        }
     }
 }

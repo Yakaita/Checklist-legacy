@@ -14,6 +14,7 @@ public final class Main extends JavaPlugin {
         instance = this;
 
         Bukkit.getServer().getPluginManager().registerEvents(new HartInventoryListener(), this);
+        this.getCommand("checklists").setExecutor(new CommandsClass());
 
         guisFile = new ConfigWrapper(this, "", "Guis.yml");
         guisFile.saveConfig();
