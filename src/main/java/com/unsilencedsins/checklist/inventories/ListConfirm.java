@@ -78,29 +78,22 @@ public class ListConfirm extends HartInventory {
         e.setCancelled(true);
 
         if (e.getCurrentItem().isSimilar(confirm)) {
-            String lastList = "";
-            final int[] id = {0};
+            final int[] id = {1};
 
-            if (!checkForPlayer()) return;
-
-            //get the id
-            Main.getInstance().getGuisFile().getConfig().getConfigurationSection("players." + player.getUniqueId().toString()).getKeys(false).forEach(p -> {
+            //get the new id
+            Main.getInstance().getListsFile().getConfig().getConfigurationSection("players." + player.getUniqueId().toString() + ".lists").getKeys(false).forEach(l -> {
                 id[0]++;
             });
 
-            if (id[0] == 0) id[0] = 1;
-
             //write the list to file
-            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list" + (id[0] + 1) + ".listName", list.getName());
-            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list" + (id[0] + 1) + ".listItem", list.getFace());
-            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list" + (id[0] + 1) + ".uniqueId", list.getUniqueId());
-            Main.getInstance().getGuisFile().saveConfig();
+            Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() + ".lists.list" + id[0] + ".listName", list.getName());
+            Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() + ".lists.list" + id[0] + ".listItem", list.getFace());
+            Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() + ".lists.list" + id[0] + ".listId", id[0]);
+            Main.getInstance().getListsFile().saveConfig();
+
+            //done writing
             player.sendMessage(ChatColor.GREEN + "List created successfully");
             player.closeInventory();
         }
-    }
-
-    private boolean checkForPlayer() {
-        return Main.getInstance().getGuisFile().getConfig().contains("players." + player.getUniqueId().toString());
     }
 }

@@ -20,7 +20,9 @@ import java.util.ArrayList;
 
 public class ListsInventory extends HartInventory {
     Player player;
+
     ArrayList<Checklist> lists;
+
     ItemStack createList;
 
     //to be used later
@@ -31,7 +33,7 @@ public class ListsInventory extends HartInventory {
         this.player = player;
         this.lists = lists;
 
-        //create the new list item
+        //create the create list item
         createList = new ItemStack(Material.GREEN_WOOL);
         ItemMeta meta = createList.getItemMeta();
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GREEN + "Create new list");
@@ -46,6 +48,7 @@ public class ListsInventory extends HartInventory {
         meta.setLore(lore);
         lastPage.setItemMeta(meta);
 
+        //create the next page item //to be used later
         nextPage = new ItemStack(Material.ARROW);
         meta = nextPage.getItemMeta();
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GRAY + "Next Page");
@@ -87,9 +90,6 @@ public class ListsInventory extends HartInventory {
             listItem.setItemMeta(meta);
 
             new AnvilGUI.Builder()
-                    .onClose(player -> {
-                        if (left[0]) player.sendMessage(ChatColor.ITALIC + "" + ChatColor.RED + "Checklist not created");
-                    })
                     .onComplete((player, text) -> {
                         left[0] = false;
 
@@ -97,6 +97,7 @@ public class ListsInventory extends HartInventory {
 
                         return AnvilGUI.Response.close();
                     })
+                    .onClose(player -> {if (left[0]) player.sendMessage(ChatColor.ITALIC + "" + ChatColor.RED + "Checklist not created");})
                     .text("New List")
                     .item(listItem)
                     .title("Set the list name")
