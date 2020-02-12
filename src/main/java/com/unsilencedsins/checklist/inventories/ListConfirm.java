@@ -79,22 +79,21 @@ public class ListConfirm extends HartInventory {
 
         if (e.getCurrentItem().isSimilar(confirm)) {
             String lastList = "";
-            int id;
+            final int[] id = {0};
 
-            if (!checkForPlayer())
-                return;
-            if (Main.getInstance().getGuisFile().getConfig().getConfigurationSection("players." + player.getUniqueId().toString()) == null)//.getKeys(false).size() == 0)
-                id = 0; //no lists
-            else {//they have at least one list
-                lastList = (String) Main.getInstance().getGuisFile().getConfig().getConfigurationSection("players." + player.getUniqueId().toString()).getKeys(false).toArray()[Main.getInstance().getGuisFile().getConfig().getConfigurationSection("players." + player.getUniqueId().toString()).getKeys(false).size() - 1];
-                id = Integer.parseInt(lastList.substring(lastList.length() - 1)) + 1;
-            }
+            if (!checkForPlayer()) return;
 
+            //get the id
+            Main.getInstance().getGuisFile().getConfig().getConfigurationSection("players." + player.getUniqueId().toString()).getKeys(false).forEach(p -> {
+                id[0]++;
+            });
+
+            if (id[0] == 0) id[0] = 1;
 
             //write the list to file
-            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list." + id + ".listName", list.getName());
-            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list." + id + ".listItem", list.getFace());
-            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list." + id + ".uniqueId", list.getUniqueId());
+            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list" + (id[0] + 1) + ".listName", list.getName());
+            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list" + (id[0] + 1) + ".listItem", list.getFace());
+            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list" + (id[0] + 1) + ".uniqueId", list.getUniqueId());
             Main.getInstance().getGuisFile().saveConfig();
             player.sendMessage(ChatColor.GREEN + "List created successfully");
             player.closeInventory();

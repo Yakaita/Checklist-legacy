@@ -15,7 +15,7 @@ public class Checklist {
 
     public Checklist(){
         tasks = new ArrayList<Task>();
-        face = new ItemStack(Material.AIR);
+        face = new ItemStack(Material.COBBLESTONE);
         name = "";
         uniqueId = -1;
     }

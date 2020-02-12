@@ -35,33 +35,33 @@ public class CommandsClass implements CommandExecutor {
                     int taskIndex = 1;
 
                     //set the list name
-                    list.setName(Main.getInstance().getGuisFile().getConfig().getString("players." + player.getUniqueId().toString() + ".list." + listIndex[0] + ".listName"));
+                    list.setName(Main.getInstance().getGuisFile().getConfig().getString("players." + player.getUniqueId().toString() + ".list" + listIndex[0] + ".listName"));
 
                     //set the list face
-                    ItemStack face = Main.getInstance().getGuisFile().getConfig().getItemStack("players." + player.getUniqueId().toString() + ".list." + listIndex[0] + ".listItem");
+                    ItemStack face = Main.getInstance().getGuisFile().getConfig().getItemStack("players." + player.getUniqueId().toString() + ".list" + listIndex[0] + ".listItem", new ItemStack(Material.GREEN_STAINED_GLASS_PANE));
                     ItemMeta meta = face.getItemMeta();
                     meta.setDisplayName(ChatColor.DARK_AQUA + list.getName());
                     face.setItemMeta(meta);
                     list.setFace(face);
 
                     //set the list uniqueId
-                    list.setUniqueId(Main.getInstance().getGuisFile().getConfig().getInt("players." + player.getUniqueId().toString() + ".list." + listIndex[0] + ".uniqueId"));
+                    list.setUniqueId(Main.getInstance().getGuisFile().getConfig().getInt("players." + player.getUniqueId().toString() + ".list" + listIndex[0] + ".uniqueId"));
 
                     //get the tasks
-                    for (int item = 2; item < Main.getInstance().getGuisFile().getConfig().getConfigurationSection("players." + player.getUniqueId().toString() + ".list." + listIndex[0]).getKeys(false).toArray().length; item++) {
+                    for (int item = 3; item < Main.getInstance().getGuisFile().getConfig().getConfigurationSection("players." + player.getUniqueId().toString() + ".list" + listIndex[0]).getKeys(false).size(); item++) {
                         //for each task in current list
                         Task task = new Task();
 
                         //set the task name
-                        task.setName(Main.getInstance().getGuisFile().getConfig().getString("players." + player.getUniqueId().toString() + ".list." + listIndex[0] + ".task." + taskIndex + ".name"));
+                        task.setName(Main.getInstance().getGuisFile().getConfig().getString("players." + player.getUniqueId().toString() + ".list" + listIndex[0] + ".task" + taskIndex + ".name"));
 
                         //set the completed boolean
-                        if(Main.getInstance().getGuisFile().getConfig().getString("players." + player.getUniqueId().toString() + ".list." + listIndex[0] + ".task." + taskIndex + ".completed").equals("true"))
+                        if(Main.getInstance().getGuisFile().getConfig().getBoolean("players." + player.getUniqueId().toString() + ".list" + listIndex[0] + ".task" + taskIndex + ".completed"))
                             task.setCompleted(true);
                         else task.setCompleted(false);
 
                         //set the task face
-                        face = Main.getInstance().getGuisFile().getConfig().getItemStack("players." + player.getUniqueId().toString() + ".list." + listIndex[0] + ".task." + taskIndex + ".face");
+                        face = Main.getInstance().getGuisFile().getConfig().getItemStack("players." + player.getUniqueId().toString() + ".list" + listIndex[0] + ".task" + taskIndex + ".face",new ItemStack( Material.COBBLESTONE));
                         meta = face.getItemMeta();
 
                         if(!task.isCompleted()) {

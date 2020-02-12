@@ -9,7 +9,7 @@ public class Task {
     boolean completed;
 
     public Task(){
-        face = new ItemStack(Material.AIR);
+        face = new ItemStack(Material.COBBLESTONE);
         name = "";
         completed = false;
     }
