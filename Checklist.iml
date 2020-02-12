@@ -27,5 +27,21 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.md-5:bungeecord-chat:1.15-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.25" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD:AnvilGUI:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_10_R1:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_11_R1:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_12_R1:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_13_R1:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_13_R2:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_14_4_R1:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_14_R1:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_15_R1:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_8_R1:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_8_R2:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_8_R3:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_9_R1:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-1_9_R2:99a504a3bb" level="project" />
+    <orderEntry type="library" name="Maven: com.github.WesJD.AnvilGUI:anvilgui-abstraction:99a504a3bb" level="project" />
   </component>
 </module>

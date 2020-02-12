@@ -2,6 +2,7 @@ package com.unsilencedsins.checklist;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,10 @@ public class Checklist {
         this.name = name;
         this.face = face;
         this.tasks = tasks;
+
+        ItemMeta meta = face.getItemMeta();
+        meta.setDisplayName(name);
+        this.face.setItemMeta(meta);
     }
 
     public ArrayList<Task> getTasks() {return tasks;}

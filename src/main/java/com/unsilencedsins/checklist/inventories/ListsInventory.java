@@ -1,5 +1,10 @@
-package com.unsilencedsins.checklist;
+package com.unsilencedsins.checklist.inventories;
 
+import com.sun.tools.javac.jvm.Items;
+import com.unsilencedsins.checklist.Checklist;
+import com.unsilencedsins.checklist.Main;
+import com.unsilencedsins.checklist.Task;
+import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ListsInventory extends HartInventory {
@@ -20,12 +26,6 @@ public class ListsInventory extends HartInventory {
     //to be used later
     ItemStack lastPage;
     ItemStack nextPage;
-
-
-    @Override
-    public void onClick(InventoryClickEvent e, int slot) {
-        e.setCancelled(true);
-    }
 
     public ListsInventory(Player player, ArrayList<Checklist> lists) {
         this.player = player;
@@ -72,10 +72,46 @@ public class ListsInventory extends HartInventory {
     }
 
     @Override
-    public void onClick(InventoryClickEvent e) {
+    public void onClick(InventoryClickEvent e, int slot) {
+        e.setCancelled(true);
 
-        if (e.getCurrentItem().equals(createList)) {
 
+        if (slot == 49) { //create list item
+            final boolean[] left = {true};
+
+            ItemStack listItem = new ItemStack(Material.BOOK);
+            ItemMeta meta = listItem.getItemMeta();
+            ArrayList<String> lore = new ArrayList<String>();
+            lore.add(ChatColor.GREEN + "Rename me!");
+            meta.setLore(lore);
+            listItem.setItemMeta(meta);
+
+            new AnvilGUI.Builder()
+                    .onClose(player -> {
+                        if (left[0]) player.sendMessage(ChatColor.ITALIC + "" + ChatColor.RED + "Checklist not created");
+                    })
+                    .onComplete((player, text) -> {
+                        left[0] = false;
+
+                        player.openInventory(new ListConfirm(new Checklist(text, new ItemStack(Material.BOOK), new ArrayList<Task>()), player).getInventory());
+
+                        return AnvilGUI.Response.close();
+                    })
+                    .text("New List")
+                    .item(listItem)
+                    .title("Set the list name")
+                    .plugin(Main.getInstance())
+                    .open(player);
+        }
+        else if (slot < 45){//clicked on one of their lists.
+           //get the id
+            int id = slot;
+            if (page > 1) id += 45 * (page - 1); //if they are on a different page
+
+            //open that list
+            for (Checklist list : lists){
+                if(list.getUniqueId() == id) player.openInventory(new TasksInventory(list, player).getInventory());
+            }
         }
     }
 }
