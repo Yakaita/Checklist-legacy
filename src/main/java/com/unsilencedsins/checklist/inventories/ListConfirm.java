@@ -92,9 +92,9 @@ public class ListConfirm extends HartInventory {
 
 
             //write the list to file
-            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list" + id + ".listName", list.getName());
-            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list" + id + ".listItem", list.getFace());
-            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list" + id + ".uniqueId", list.getUniqueId());
+            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list." + id + ".listName", list.getName());
+            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list." + id + ".listItem", list.getFace());
+            Main.getInstance().getGuisFile().getConfig().set("players." + player.getUniqueId().toString() + ".list." + id + ".uniqueId", list.getUniqueId());
             Main.getInstance().getGuisFile().saveConfig();
             player.sendMessage(ChatColor.GREEN + "List created successfully");
             player.closeInventory();
