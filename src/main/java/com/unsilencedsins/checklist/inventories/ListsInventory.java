@@ -93,11 +93,19 @@ public class ListsInventory extends HartInventory {
                     .onComplete((player, text) -> {
                         left[0] = false;
 
-                        player.openInventory(new ListConfirm(new Checklist(text, new ItemStack(Material.BOOK), new ArrayList<Task>()), player).getInventory());
+                        if (text.trim().equals("")){
+                            player.sendMessage(ChatColor.RED + "You can't have an empty name. Try again");
+                            left[0] = true;
+                            return AnvilGUI.Response.close();
+                        }
+
+                        player.openInventory(new ListConfirm(new Checklist(text, new ItemStack(Material.BOOK),
+                                new ArrayList<Task>()), player, ListConfirm.GUIType.CREATE).getInventory());
 
                         return AnvilGUI.Response.close();
                     })
-                    .onClose(player -> {if (left[0]) player.sendMessage(ChatColor.ITALIC + "" + ChatColor.RED + "Checklist not created");})
+                    .onClose(player -> {if (left[0]) player.sendMessage(ChatColor.ITALIC + "" + ChatColor.RED +
+                            "Checklist not created");})
                     .text("New List")
                     .item(listItem)
                     .title("Set the list name")
