@@ -30,7 +30,8 @@ public class Task {
         setCompleted(completed);
 
         ItemMeta meta = face.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',name));
+        meta.setDisplayName(ChatColor.WHITE + name);
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         this.face.setItemMeta(meta);
     }
 
@@ -56,8 +57,9 @@ public class Task {
         ItemMeta meta = face.getItemMeta();
         meta.setLore(lore);
 
-        if (completed) if (!meta.hasEnchants()) meta.addEnchant(Enchantment.DAMAGE_ALL, 5, false);
-        else if (meta.hasEnchants()) meta.removeEnchant(Enchantment.DAMAGE_ALL);
+        if (completed)
+            if (!meta.hasEnchants()) meta.addEnchant(Enchantment.DAMAGE_ALL, 5, false);
+            else meta.removeEnchant(Enchantment.DAMAGE_ALL);
 
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         face.setItemMeta(meta);

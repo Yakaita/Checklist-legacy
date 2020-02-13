@@ -46,7 +46,7 @@ public class TaskConfirm extends HartInventory {
         confirm = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
         ItemMeta confirmMeta = confirm.getItemMeta();
         confirmMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aConfirm task &e" +
-                list.getName() + "&a?"));
+                task.getName() + "&a?"));
         confirm.setItemMeta(confirmMeta);
 
         //create cancel item
@@ -55,7 +55,7 @@ public class TaskConfirm extends HartInventory {
         cancelMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&4Cancel"));
         cancel.setItemMeta(cancelMeta);
 
-        //set the list
+        //set the item
         ItemStack item = task.getFace();
         ItemMeta taskMeta = item.getItemMeta();
         ArrayList<String> lore = new ArrayList<String>();
@@ -108,7 +108,7 @@ public class TaskConfirm extends HartInventory {
                 }
 
                 task.setUniqueId(id[0]);
-                task.setPath(list.getPath() + "tasks.task" + id[0]);
+                task.setPath(list.getPath() + ".tasks.task" + id[0]);
 
                 //set loose params
                 ItemStack item = task.getFace();
