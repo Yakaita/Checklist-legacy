@@ -30,33 +30,29 @@ public class CommandsClass implements CommandExecutor {
                             player.getUniqueId().toString() + ".lists").getKeys(false).forEach(p -> {
                         //for each list
                         Checklist list = new Checklist();
-                        list.setName(Main.getInstance().getListsFile().getConfig().getString("players." +
-                                player.getUniqueId().toString() + ".lists.list" + listCount[0] + ".listName")); //get the list name
-                        list.setFace(Main.getInstance().getListsFile().getConfig().getItemStack("players." +
-                                player.getUniqueId().toString() + ".lists.list" + listCount[0] + ".listItem")); //get the list item
-                        list.setUniqueId(Main.getInstance().getListsFile().getConfig().getInt("players." +
-                                player.getUniqueId().toString() + ".lists.list" + listCount[0] + ".listId")); //get the list id
-
+                        list.setPath("players." + player.getUniqueId().toString() + ".lists.list" + listCount[0]);//set the path of the list
+                        list.setName(Main.getInstance().getListsFile().getConfig().getString(list.getPath() +
+                                ".listName")); //get the list name
+                        list.setFace(Main.getInstance().getListsFile().getConfig().getItemStack(list.getPath() +
+                                ".listItem")); //get the list item
+                        list.setUniqueId(Main.getInstance().getListsFile().getConfig().getInt(list.getPath() +
+                                ".listId")); //get the list id
 
                         if (Task.listHasTasks(player, list)) {
                             //get the tasks
-                            Main.getInstance().getListsFile().getConfig().getConfigurationSection("players." +
-                                    player.getUniqueId().toString() + ".lists.list" + listCount[0] + ".tasks").
-                                    getKeys(false).forEach(t -> {
+                            Main.getInstance().getListsFile().getConfig().getConfigurationSection(list.getPath() +
+                                    ".tasks").getKeys(false).forEach(t -> {
                                 //for each task
                                 Task task = new Task();
-                                task.setName(Main.getInstance().getListsFile().getConfig().getString("players." +
-                                        player.getUniqueId().toString() + ".lists.list" + listCount[0] + ".tasks.task" +
-                                        taskCount[0] + ".taskName")); //get the task name
-                                task.setFace(Main.getInstance().getListsFile().getConfig().getItemStack("players." +
-                                        player.getUniqueId().toString() + ".lists.list" + listCount[0] +
-                                        ".tasks.task" + taskCount[0] + ".taskItem")); //get the task Item
-                                task.setCompleted(Main.getInstance().getListsFile().getConfig().getBoolean("players." +
-                                        player.getUniqueId().toString() + ".lists.list" + listCount[0] +
-                                        ".tasks.task" + taskCount[0] + ".completed")); //get the completed boolean
-                                task.setUniqueId(Main.getInstance().getListsFile().getConfig().getInt("players." +
-                                        player.getUniqueId().toString() + ".lists.list" + listCount[0] +
-                                        ".tasks.task" + taskCount[0] + ".taskId")); //get the task id
+                                task.setPath(list.getPath() + ".tasks.task" + taskCount[0]); //set the task path
+                                task.setName(Main.getInstance().getListsFile().getConfig().getString(task.getPath() +
+                                        ".taskName")); //get the task name
+                                task.setFace(Main.getInstance().getListsFile().getConfig().getItemStack(task.getPath() +
+                                        ".taskItem")); //get the task Item
+                                task.setCompleted(Main.getInstance().getListsFile().getConfig().getBoolean(task.getPath() +
+                                        ".completed")); //get the completed boolean
+                                task.setUniqueId(Main.getInstance().getListsFile().getConfig().getInt(task.getPath() +
+                                        ".taskId")); //get the task id
 
                                 list.addTask(task);
                                 taskCount[0]++;

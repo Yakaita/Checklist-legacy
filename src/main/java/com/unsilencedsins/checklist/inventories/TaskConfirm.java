@@ -6,9 +6,9 @@ import com.unsilencedsins.checklist.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,12 +16,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 public class TaskConfirm extends HartInventory {
-    ItemStack confirm;
-    ItemStack cancel;
-    Task task;
-    Player player;
-    Checklist list;
-    GUIType type;
+    private ItemStack confirm;
+    private ItemStack cancel;
+    private Task task;
+    private Player player;
+    private Checklist list;
+    private GUIType type;
+    private boolean left = true;
 
     public enum GUIType {CREATE, EDIT}
 
@@ -86,40 +87,39 @@ public class TaskConfirm extends HartInventory {
     }
 
     @Override
+    public void onClose(InventoryCloseEvent e) {
+        if (left) player.sendMessage(ChatColor.RED + "Task not created");
+    }
+
+    @Override
     public void onClick(InventoryClickEvent e, int slot) {
         e.setCancelled(true);
 
         if (e.getCurrentItem().isSimilar(confirm)) {
+            left = false;
+
             if (type == GUIType.CREATE) {
                 final int[] id = {0};
 
                 //get the new id
                 if (Task.listHasTasks(player, list)) {
-                    Main.getInstance().getListsFile().getConfig().getConfigurationSection("players." +
-                            player.getUniqueId().toString() + ".lists.list" + list.getUniqueId() + ".tasks").
+                    Main.getInstance().getListsFile().getConfig().getConfigurationSection(list.getPath() + ".tasks").
                             getKeys(false).forEach(p -> id[0]++);
                 }
 
                 task.setUniqueId(id[0]);
+                task.setPath(list.getPath() + "tasks.task" + id[0]);
 
-                //remove lore
-                ItemMeta meta = task.getFace().getItemMeta();
-                ArrayList<String> lore = new ArrayList<String>();
-                lore.add(ChatColor.GOLD + "Completed: " + task.isCompleted());
-                meta.setLore(lore);
+                //set loose params
                 ItemStack item = task.getFace();
-                item.setItemMeta(meta);
                 task.setFace(item);
+                task.setCompleted(false);
 
                 //write the task to file
-                Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() +
-                        ".lists.list" + id[0] + ".tasks.task" + task.getUniqueId() + ".taskName", task.getName()); //set task name
-                Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() +
-                        ".lists.list" + id[0] + ".tasks.task" + task.getUniqueId() + ".taskItem", task.getFace()); //set the task face
-                Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() +
-                        ".lists.list" + id[0] + ".tasks.task" + task.getUniqueId() + ".completed", false); //set the completed boolean
-                Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() +
-                        ".lists.list" + id[0] + ".tasks.task" + task.getUniqueId() + ".taskId", id[0]); //set the task id
+                Main.getInstance().getListsFile().getConfig().set(task.getPath() + ".taskName", task.getName()); //set task name
+                Main.getInstance().getListsFile().getConfig().set(task.getPath() + ".taskItem", task.getFace()); //set the task face
+                Main.getInstance().getListsFile().getConfig().set(task.getPath() + ".completed", false); //set the completed boolean
+                Main.getInstance().getListsFile().getConfig().set(task.getPath() + ".taskId", id[0]); //set the task id
                 Main.getInstance().getListsFile().saveConfig();
 
                 //add the task to the list
@@ -128,8 +128,11 @@ public class TaskConfirm extends HartInventory {
                 //done writing
                 player.sendMessage(ChatColor.GREEN + "Task created successfully");
                 player.openInventory(new TasksInventory(list, player).getInventory());
-            } else if (type == GUIType.EDIT) {}
+            } else if (type == GUIType.EDIT) {
+            }
         } else if (e.getCurrentItem().isSimilar(cancel)) {
+            left = false;
+
             player.closeInventory();
 
             String msg = "";
@@ -139,6 +142,8 @@ public class TaskConfirm extends HartInventory {
 
             player.sendMessage(ChatColor.RED + msg);
         } else {
+            left = false;
+
             ItemStack newFace = new ItemStack(e.getCurrentItem().getType());
             ItemMeta oldMeta = (task.getFace().hasItemMeta()) ? task.getFace().getItemMeta() : newFace.getItemMeta();
             newFace.setItemMeta(oldMeta);

@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -85,11 +86,10 @@ public class TasksInventory extends HartInventory {
     public void onClick(InventoryClickEvent e, int slot) {
         e.setCancelled(true);
 
-        if(slot == 45){//back button
+        if (slot == 45) {//back button
             e.getWhoClicked().openInventory(new ListsInventory((Player) e.getWhoClicked(),
                     Checklist.getChecklists((Player) e.getWhoClicked())).getInventory());
-        }
-        else if (slot == 49) { //create task item
+        } else if (slot == 49) { //create task item
             final boolean[] left = {true};
 
             ItemStack taskItem = new ItemStack(Material.PAPER);
@@ -108,13 +108,39 @@ public class TasksInventory extends HartInventory {
 
                         return AnvilGUI.Response.close();
                     })
-                    .onClose(player -> {if (left[0]) player.sendMessage(ChatColor.ITALIC + "" + ChatColor.RED +
-                            "Task not created");})
+                    .onClose(player -> {
+                        if (left[0]) player.sendMessage(ChatColor.ITALIC + "" + ChatColor.RED +
+                                "Task not created");
+                    })
                     .text("New Task")
                     .item(taskItem)
                     .title("Set the task name")
                     .plugin(Main.getInstance())
                     .open(player);
+        } else if (slot < 45) {//they clicked on on of the tasks
+            int id = slot;
+            if (page > 1) id += 45 * (page - 1); //if they are on a different page
+
+            Task clickedTask = null;
+
+            for (Task task : list.getTasks())
+                if (task.getUniqueId() == id) {
+                    clickedTask = task;
+                    break;
+                }
+
+            if (clickedTask != null) {
+                if (e.isLeftClick()) {//left clicked
+                    if (clickedTask.isCompleted()) clickedTask.setCompleted(false);
+                    else clickedTask.setCompleted(true);
+
+                    player.openInventory(new TasksInventory(list, player).getInventory());
+                } else if (e.getClick().equals(ClickType.MIDDLE)) {//middle clicked
+
+                } else {//right clicked
+
+                }
+            }
         }
     }
 }

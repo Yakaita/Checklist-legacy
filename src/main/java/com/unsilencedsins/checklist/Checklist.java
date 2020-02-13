@@ -1,5 +1,6 @@
 package com.unsilencedsins.checklist;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ public class Checklist {
     private ItemStack face;
     private String name;
     private int uniqueId;
+    private String path;
 
     public Checklist() {
         tasks = new ArrayList<Task>();
@@ -27,7 +29,7 @@ public class Checklist {
         this.tasks = tasks;
 
         ItemMeta meta = face.getItemMeta();
-        meta.setDisplayName(name);
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',name));
         this.face.setItemMeta(meta);
     }
 
@@ -58,6 +60,7 @@ public class Checklist {
     public void addTask(Task newTask) {
         tasks.add(newTask);
     }
+    public void removeTask(Task delTask) {tasks.remove(delTask);}
 
     public int getUniqueId() {
         return uniqueId;
@@ -66,6 +69,10 @@ public class Checklist {
     public void setUniqueId(int uniqueId) {
         this.uniqueId = uniqueId;
     }
+
+    public String getPath() {return path;}
+
+    public void setPath(String path) {this.path = path;}
 
     public static boolean playerHasLists(Player p) {
         ConfigurationSection sec = Main.getInstance().getListsFile().getConfig().getConfigurationSection("players." +

@@ -5,9 +5,9 @@ import com.unsilencedsins.checklist.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,11 +15,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 public class ListConfirm extends HartInventory {
-    ItemStack confirm;
-    ItemStack cancel;
-    Checklist list;
-    Player player;
-    GUIType type;
+    private ItemStack confirm;
+    private ItemStack cancel;
+    private Checklist list;
+    private Player player;
+    private GUIType type;
+    private boolean left = true;
 
     public enum GUIType {CREATE, EDIT}
 
@@ -83,10 +84,17 @@ public class ListConfirm extends HartInventory {
     }
 
     @Override
+    public void onClose(InventoryCloseEvent e) {
+        if (left) player.sendMessage(ChatColor.RED + "List not created");
+    }
+
+    @Override
     public void onClick(InventoryClickEvent e, int slot) {
         e.setCancelled(true);
 
         if (e.getCurrentItem().isSimilar(confirm)) {
+            left = false;
+
             if (type == GUIType.CREATE) {
                 final int[] id = {0};
 
@@ -97,6 +105,7 @@ public class ListConfirm extends HartInventory {
                 }
 
                 list.setUniqueId(id[0]);
+                list.setPath("players." + player.getUniqueId().toString() + ".lists.list" + id[0]);
 
                 //remove lore
                 ItemMeta meta = list.getFace().getItemMeta();
@@ -108,12 +117,9 @@ public class ListConfirm extends HartInventory {
                 list.setFace(item);
 
                 //write the list to file
-                Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() +
-                        ".lists.list" + id[0] + ".listName", list.getName());//set the list Name
-                Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() +
-                        ".lists.list" + id[0] + ".listItem", list.getFace());//set the list Item
-                Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() +
-                        ".lists.list" + id[0] + ".listId", id[0]);//set the list id
+                Main.getInstance().getListsFile().getConfig().set(list.getPath() + ".listName", list.getName());//set the list Name
+                Main.getInstance().getListsFile().getConfig().set(list.getPath() + ".listItem", list.getFace());//set the list Item
+                Main.getInstance().getListsFile().getConfig().set(list.getPath() + ".listId", id[0]);//set the list id
                 Main.getInstance().getListsFile().saveConfig();
 
                 //done writing
@@ -122,6 +128,8 @@ public class ListConfirm extends HartInventory {
             }
             else if(type == GUIType.EDIT){}
         } else if (e.getCurrentItem().isSimilar(cancel)) {
+            left = false;
+
             player.closeInventory();
 
             String msg = "";
@@ -131,6 +139,8 @@ public class ListConfirm extends HartInventory {
 
             player.sendMessage(ChatColor.RED + msg);
         } else {
+            left = false;
+
             ItemStack newFace = new ItemStack(e.getCurrentItem().getType());
             ItemMeta oldMeta = list.getFace().getItemMeta();
             newFace.setItemMeta(oldMeta);
