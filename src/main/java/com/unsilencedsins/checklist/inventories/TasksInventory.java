@@ -121,24 +121,26 @@ public class TasksInventory extends HartInventory {
             int id = slot;
             if (page > 1) id += 45 * (page - 1); //if they are on a different page
 
-            Task clickedTask = null;
+            Task clickedTask = new Task();
 
             for (Task task : list.getTasks())
                 if (task.getUniqueId() == id) {
-                    clickedTask = task;
+                    clickedTask.setPath(task.getPath());
+                    clickedTask.setName(task.getName());
+                    clickedTask.setUniqueId(task.getUniqueId());
+                    clickedTask.setFace(new ItemStack(task.getFace().getType()));
                     break;
                 }
 
-            if (clickedTask != null) {
+            if (!clickedTask.getName().equals("")) {
                 if (e.isLeftClick()) {//left clicked
                     if (clickedTask.isCompleted()) clickedTask.setCompleted(false);
                     else clickedTask.setCompleted(true);
 
                     player.openInventory(new TasksInventory(list, player).getInventory());
                 } else if (e.getClick().equals(ClickType.MIDDLE)) {//middle clicked
-
                 } else {//right clicked
-
+                    new DeleteConfim(clickedTask, list, player);
                 }
             }
         }

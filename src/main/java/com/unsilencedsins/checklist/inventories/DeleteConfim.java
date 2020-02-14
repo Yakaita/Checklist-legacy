@@ -15,17 +15,14 @@ public class DeleteConfim {
                 .onComplete((p, text) -> {
                     left = false;
 
-                    if (text.equals(task.getName())){
+                    if (text.equals(task.getName())){//entered the correct value
                         //delete the task from the file
                         Main.getInstance().getListsFile().getConfig().set(task.getPath(), null);
+                        list.removeTask(task.getUniqueId());
 
                         int id = 0;
                         //remove the task from the list and rewrite the file
                         for (Task tsk: list.getTasks()) {
-                            if (tsk.getUniqueId() == task.getUniqueId()) {
-                                list.removeTask(tsk);
-                                continue;
-                            }
                             tsk.setPath(list.getPath() + ".tasks.task" + id);
 
                             //write the task to file
@@ -38,6 +35,7 @@ public class DeleteConfim {
                         }
 
                         player.sendMessage(ChatColor.GREEN + "Task successfully deleted");
+                        player.openInventory(new TasksInventory(list, player).getInventory());
                     }
                     else player.sendMessage(ChatColor.RED +
                             "The name you entered does not match the list. The task was not deleted.");
@@ -51,6 +49,5 @@ public class DeleteConfim {
                 .title("Confirm Task Deletion")
                 .plugin(Main.getInstance())
                 .open(player);
-
     }
 }

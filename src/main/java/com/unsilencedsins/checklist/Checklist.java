@@ -60,9 +60,9 @@ public class Checklist {
     public void addTask(Task newTask) {
 
         tasks.add(newTask);
-        Main.getInstance().getServer().broadcastMessage("added to list");
     }
     public void removeTask(Task delTask) {tasks.remove(delTask);}
+    public void removeTask(int pos) {tasks.remove(pos);}
 
     public int getUniqueId() {
         return uniqueId;
@@ -104,8 +104,7 @@ public class Checklist {
 
                 if (Task.listHasTasks(p, list)) {
                     //get the tasks
-                    Main.getInstance().getListsFile().getConfig().getConfigurationSection("players." +
-                            p.getUniqueId().toString() + ".lists.list" + listCount[0] + ".tasks").
+                    Main.getInstance().getListsFile().getConfig().getConfigurationSection(list.getPath() + ".tasks").
                             getKeys(false).forEach(t -> {
                         //for each task
                         Task task = new Task();
@@ -129,8 +128,6 @@ public class Checklist {
                 listCount[0]++;
             });
         }
-
-
         return lists;
     }
 }
