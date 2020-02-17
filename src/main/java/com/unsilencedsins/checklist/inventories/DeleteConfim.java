@@ -19,7 +19,7 @@ public class DeleteConfim {
 
                     if (text.equals(task.getName())) {//entered the correct value
                         //delete the task from the file
-                        Main.getInstance().getListsFile().getConfig().set(task.getPath(), null);
+                        Main.getInstance().getListsFile().getConfig().set(list.getPath() + ".tasks", null);
                         list.removeTask(task.getUniqueId());
 
                         int id = 0;
@@ -59,19 +59,13 @@ public class DeleteConfim {
                     left = false;
 
                     if (text.equals(list.getName())) {//entered the correct value
-                        //delete the list from the file
-                        Main.getInstance().getListsFile().getConfig().set(list.getPath(), null);
-                        Main.getInstance().getListsFile().saveConfig();
 
                         int listId = 0;
                         //rewrite the file
-                        int listToDelete = list.getUniqueId();
+                        lists.remove(list.getUniqueId());
+                        Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString() + ".lists", null);
+                        Main.getInstance().getListsFile().saveConfig();
                         for (Checklist lst : lists) {
-
-                            if (lst.getUniqueId() == list.getUniqueId()) {
-                                continue;
-                            }
-
                             int taskId = 0;
                             lst.setPath("players." + player.getUniqueId().toString() + ".lists.list" + listId);
 
@@ -97,10 +91,8 @@ public class DeleteConfim {
                             listId++;
                         }
 
-                        lists.remove(listToDelete);
-
                         player.sendMessage(ChatColor.GREEN + "Checklist successfully deleted");
-                        player.openInventory(new ListsInventory(player, lists).getInventory());
+                        player.openInventory(new ListsInventory(player, Checklist.getChecklists(player)).getInventory());
                     } else
                         player.sendMessage(ChatColor.RED +
                                 "The name you entered does not match the checklist. The checklist was not deleted.");
