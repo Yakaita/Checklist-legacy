@@ -134,6 +134,13 @@ public class TasksInventory extends HartInventory {
 
             if (!clickedTask.getName().equals("")) {
                 if (e.isLeftClick()) {//left clicked
+
+                    for (Task task : list.getTasks())
+                        if (task.getUniqueId() == id) {
+                            clickedTask = task;
+                            break;
+                        }
+
                     if (clickedTask.isCompleted()) clickedTask.setCompleted(false);
                     else clickedTask.setCompleted(true);
 

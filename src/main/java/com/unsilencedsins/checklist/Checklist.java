@@ -29,7 +29,7 @@ public class Checklist {
         this.tasks = tasks;
 
         ItemMeta meta = face.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',name));
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         this.face.setItemMeta(meta);
     }
 
@@ -58,11 +58,16 @@ public class Checklist {
     }
 
     public void addTask(Task newTask) {
-
         tasks.add(newTask);
     }
-    public void removeTask(Task delTask) {tasks.remove(delTask);}
-    public void removeTask(int pos) {tasks.remove(pos);}
+
+    public void removeTask(Task delTask) {
+        tasks.remove(delTask);
+    }
+
+    public void removeTask(int pos) {
+        tasks.remove(pos);
+    }
 
     public int getUniqueId() {
         return uniqueId;
@@ -72,9 +77,25 @@ public class Checklist {
         this.uniqueId = uniqueId;
     }
 
-    public String getPath() {return path;}
+    public String getPath() {
+        return path;
+    }
 
-    public void setPath(String path) {this.path = path;}
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setLore() {
+        //set the lore
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lLeft click&r to open"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lMiddle click&r to edit"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lRight click&r to delete"));
+
+        ItemMeta meta = face.getItemMeta();
+        meta.setLore(lore);
+        face.setItemMeta(meta);
+    }
 
     public static boolean playerHasLists(Player p) {
         ConfigurationSection sec = Main.getInstance().getListsFile().getConfig().getConfigurationSection("players." +
@@ -85,7 +106,7 @@ public class Checklist {
     }
 
     public static ArrayList<Checklist> getChecklists(Player p) {
-        ArrayList<Checklist> lists = new ArrayList<Checklist>();
+        ArrayList<Checklist> lists = new ArrayList<>();
 
         if (playerHasLists(p)) {
             final int[] listCount = {0};
@@ -100,7 +121,7 @@ public class Checklist {
                 list.setName(Main.getInstance().getListsFile().getConfig().getString(list.getPath() + ".listName")); //get the list name
                 list.setFace(Main.getInstance().getListsFile().getConfig().getItemStack(list.getPath() + ".listItem")); //get the list item
                 list.setUniqueId(Main.getInstance().getListsFile().getConfig().getInt(list.getPath() + ".listId")); //get the list id
-
+                list.setLore();
 
                 if (Task.listHasTasks(p, list)) {
                     //get the tasks

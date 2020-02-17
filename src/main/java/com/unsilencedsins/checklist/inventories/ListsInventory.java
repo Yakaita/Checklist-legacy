@@ -1,6 +1,5 @@
 package com.unsilencedsins.checklist.inventories;
 
-import com.sun.tools.javac.jvm.Items;
 import com.unsilencedsins.checklist.Checklist;
 import com.unsilencedsins.checklist.Main;
 import com.unsilencedsins.checklist.Task;
@@ -8,14 +7,13 @@ import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ListsInventory extends HartInventory {
@@ -43,7 +41,7 @@ public class ListsInventory extends HartInventory {
         lastPage = new ItemStack(Material.ARROW);
         meta = lastPage.getItemMeta();
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GRAY + "Previous Page");
-        ArrayList<String> lore = new ArrayList<String>();
+        ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.LIGHT_PURPLE + "Current Page: " + page);
         meta.setLore(lore);
         lastPage.setItemMeta(meta);
@@ -78,7 +76,6 @@ public class ListsInventory extends HartInventory {
     public void onClick(InventoryClickEvent e, int slot) {
         e.setCancelled(true);
 
-
         if (slot == 49) { //create list item
             final boolean[] left = {true};
 
@@ -93,7 +90,7 @@ public class ListsInventory extends HartInventory {
                     .onComplete((player, text) -> {
                         left[0] = false;
 
-                        if (text.trim().equals("")){
+                        if (text.trim().equals("")) {
                             player.sendMessage(ChatColor.RED + "You can't have an empty name. Try again");
                             left[0] = true;
                             return AnvilGUI.Response.close();
@@ -104,22 +101,43 @@ public class ListsInventory extends HartInventory {
 
                         return AnvilGUI.Response.close();
                     })
-                    .onClose(player -> {if (left[0]) player.sendMessage(ChatColor.ITALIC + "" + ChatColor.RED +
-                            "Checklist not created");})
+                    .onClose(player -> {
+                        if (left[0]) player.sendMessage(ChatColor.ITALIC + "" + ChatColor.RED +
+                                "Checklist not created");
+                    })
                     .text("New List")
                     .item(listItem)
                     .title("Set the list name")
                     .plugin(Main.getInstance())
                     .open(player);
-        }
-        else if (slot < 45){//clicked on one of their lists.
-           //get the id
+        } else if (slot < 45) {//clicked on one of their lists.
             int id = slot;
             if (page > 1) id += 45 * (page - 1); //if they are on a different page
 
-            //open that list
-            for (Checklist list : lists){
-                if(list.getUniqueId() == id) player.openInventory(new TasksInventory(list, player).getInventory());
+            Checklist clickedList = new Checklist();
+
+            for (Checklist list : lists)
+                if (list.getUniqueId() == id) {
+                    clickedList.setPath(list.getPath());
+                    clickedList.setName(list.getName());
+                    clickedList.setUniqueId(list.getUniqueId());
+                    clickedList.setFace(new ItemStack(list.getFace().getType()));
+                    break;
+                }
+
+            if (!clickedList.getName().equals("")) {
+                if (e.isLeftClick()) {//left clicked
+                    for (Checklist list : lists)
+                        if (list.getUniqueId() == id) {
+                            clickedList = list;
+                            break;
+                        }
+
+                    player.openInventory(new TasksInventory(clickedList, player).getInventory());
+                } else if (e.getClick().equals(ClickType.MIDDLE)) { } //middle clicked
+                else {//right clicked
+                    new DeleteConfim(clickedList, player, lists);
+                }
             }
         }
     }

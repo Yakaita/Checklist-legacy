@@ -57,9 +57,10 @@ public class Task {
         ItemMeta meta = face.getItemMeta();
         meta.setLore(lore);
 
-        if (completed)
+        if (completed) {
             if (!meta.hasEnchants()) meta.addEnchant(Enchantment.DAMAGE_ALL, 5, false);
             else meta.removeEnchant(Enchantment.DAMAGE_ALL);
+        }
 
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         face.setItemMeta(meta);

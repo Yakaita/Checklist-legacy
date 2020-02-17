@@ -16,7 +16,7 @@ public class CommandsClass implements CommandExecutor {
         Player player = (Player) sender;
 
         if (command.getName().equalsIgnoreCase("checklists")) {
-            ArrayList<Checklist> lists = new ArrayList<Checklist>();
+            ArrayList<Checklist> lists = new ArrayList<>();
 
             if (Main.getInstance().getListsFile().getConfig().contains("players." + player.getUniqueId().toString())) {
                 //they have done the command before, get their info
