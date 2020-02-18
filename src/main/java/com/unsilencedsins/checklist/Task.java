@@ -52,7 +52,6 @@ public class Task {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.GOLD + "Completed: " + completed);
         lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lLeft click&r to toggle complete"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lMiddle click&r to edit"));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lRight click&r to delete"));
         ItemMeta meta = face.getItemMeta();
         meta.setLore(lore);

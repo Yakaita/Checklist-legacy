@@ -89,7 +89,6 @@ public class Checklist {
         //set the lore
         ArrayList<String> lore = new ArrayList<String>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lLeft click&r to open"));
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lMiddle click&r to edit"));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lRight click&r to delete"));
 
         ItemMeta meta = face.getItemMeta();
