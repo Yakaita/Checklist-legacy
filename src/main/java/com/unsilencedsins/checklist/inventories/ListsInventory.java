@@ -1,31 +1,31 @@
 package com.unsilencedsins.checklist.inventories;
 
+import com.google.common.collect.Lists;
 import com.unsilencedsins.checklist.Checklist;
 import com.unsilencedsins.checklist.Main;
-import com.unsilencedsins.checklist.Task;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListsInventory extends HartInventory {
-    Player player;
+    private Player player;
 
-    ArrayList<Checklist> lists;
+    private ArrayList<Checklist> lists;
+    private List<List<Checklist>> chunks;
 
-    ItemStack createList;
+    private ItemStack createList;
 
-    //to be used later
-    ItemStack lastPage;
-    ItemStack nextPage;
+    private ItemStack lastPage;
+    private ItemStack nextPage;
 
     public ListsInventory(Player player, ArrayList<Checklist> lists) {
         this.player = player;
@@ -37,7 +37,18 @@ public class ListsInventory extends HartInventory {
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GREEN + "Create new list");
         createList.setItemMeta(meta);
 
-        //create the last page item //to be used later
+        // set default page
+        this.page = 1;
+        // divide chunks
+        this.chunks = Lists.partition(lists, 45);
+    }
+
+    @Override
+    public Inventory getInventory() {
+        Inventory inv = Bukkit.createInventory(this, this.defaultSize, player.getName() + "'s Lists");
+
+        ItemMeta meta;
+        //create the last page item
         lastPage = new ItemStack(Material.ARROW);
         meta = lastPage.getItemMeta();
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GRAY + "Previous Page");
@@ -46,28 +57,21 @@ public class ListsInventory extends HartInventory {
         meta.setLore(lore);
         lastPage.setItemMeta(meta);
 
-        //create the next page item //to be used later
+        //create the next page item
         nextPage = new ItemStack(Material.ARROW);
         meta = nextPage.getItemMeta();
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GRAY + "Next Page");
         meta.setLore(lore);
         nextPage.setItemMeta(meta);
-    }
-
-    @Override
-    public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, this.defaultSize, player.getName() + "'s Lists");
 
         //set the bottom row of options
         inv.setItem(49, createList);
-        inv.setItem(51, nextPage); //to be used later
-        inv.setItem(47, lastPage); //to be used later
+        inv.setItem(51, nextPage);
+        inv.setItem(47, lastPage);
 
-        //set the different lists
-        for (Checklist list : lists) {
-            //limit to 45 lists until I do pages.
-            if (list.getUniqueId() < 45) inv.setItem(list.getUniqueId(), list.getFace());
-        }
+        // display list depending on page
+        try {chunks.get(this.page - 1).forEach(list -> inv.setItem(inv.firstEmpty(), list.getFace())); }
+        catch(Exception e){}
 
         return inv;
     }
@@ -81,7 +85,7 @@ public class ListsInventory extends HartInventory {
 
             ItemStack listItem = new ItemStack(Material.BOOK);
             ItemMeta meta = listItem.getItemMeta();
-            ArrayList<String> lore = new ArrayList<String>();
+            ArrayList<String> lore = new ArrayList<>();
             lore.add(ChatColor.GREEN + "Rename me!");
             meta.setLore(lore);
             listItem.setItemMeta(meta);
@@ -97,7 +101,7 @@ public class ListsInventory extends HartInventory {
                         }
 
                         player.openInventory(new ListConfirm(new Checklist(text, new ItemStack(Material.BOOK),
-                                new ArrayList<Task>()), player, ListConfirm.GUIType.CREATE).getInventory());
+                                new ArrayList<>()), player, ListConfirm.GUIType.CREATE).getInventory());
 
                         return AnvilGUI.Response.close();
                     })
@@ -126,7 +130,7 @@ public class ListsInventory extends HartInventory {
                 }
 
             if (!clickedList.getName().equals("")) {
-                if (e.isLeftClick()) {//left clicked
+                if (e.isLeftClick()) {//left clicked. Open the list
                     for (Checklist list : lists)
                         if (list.getUniqueId() == id) {
                             clickedList = list;
@@ -134,11 +138,16 @@ public class ListsInventory extends HartInventory {
                         }
 
                     player.openInventory(new TasksInventory(clickedList, player).getInventory());
-                } else if (e.getClick().equals(ClickType.MIDDLE)) { } //middle clicked
-                else {//right clicked
+                } else if (e.isRightClick()) {//right clicked. delete list
                     new DeleteConfim(clickedList, player, lists);
                 }
             }
+        }
+        else if (slot == 51){ //next page
+            if (this.page >= 1) player.openInventory(this.setPage(this.page + 1).getInventory());
+        }
+        else if (slot == 47){ //back page
+            if (this.page > 1) player.openInventory(this.setPage(this.page - 1).getInventory());
         }
     }
 }

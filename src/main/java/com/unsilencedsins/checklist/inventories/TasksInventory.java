@@ -1,5 +1,6 @@
 package com.unsilencedsins.checklist.inventories;
 
+import com.google.common.collect.Lists;
 import com.unsilencedsins.checklist.Checklist;
 import com.unsilencedsins.checklist.Main;
 import com.unsilencedsins.checklist.Task;
@@ -17,16 +18,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TasksInventory extends HartInventory {
-    Checklist list;
-    Player player;
-    ItemStack createTask;
-    ItemStack back;
+    private Checklist list;
+    private Player player;
 
-    //to be used later
-    ItemStack lastPage;
-    ItemStack nextPage;
+    private List<List<Task>> chunks;
+
+    private ItemStack createTask;
+    private ItemStack back;
+    private ItemStack lastPage;
+    private ItemStack nextPage;
 
     public TasksInventory(Checklist list, Player player) {
         this.list = list;
@@ -44,7 +47,18 @@ public class TasksInventory extends HartInventory {
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GREEN + "Back to lists");
         back.setItemMeta(meta);
 
-        //create the last page item //to be used later
+        // set default page
+        this.page = 1;
+        // divide chunks
+        this.chunks = Lists.partition(list.getTasks(), 45);
+    }
+
+    @Override
+    public Inventory getInventory() {
+        Inventory inv = Bukkit.createInventory(this, this.defaultSize, list.getName());
+
+        ItemMeta meta;
+        //create the last page item
         lastPage = new ItemStack(Material.ARROW);
         meta = lastPage.getItemMeta();
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GRAY + "Previous Page");
@@ -53,31 +67,21 @@ public class TasksInventory extends HartInventory {
         meta.setLore(lore);
         lastPage.setItemMeta(meta);
 
-        //create the next page item //to be used later
+        //create the next page item
         nextPage = new ItemStack(Material.ARROW);
         meta = nextPage.getItemMeta();
         meta.setDisplayName(ChatColor.ITALIC + "" + ChatColor.GRAY + "Next Page");
         meta.setLore(lore);
         nextPage.setItemMeta(meta);
-    }
-
-    @Override
-    public Inventory getInventory() {
-        Inventory inv = Bukkit.createInventory(this, this.defaultSize, list.getName());
-
         //set the bottom row of options
         inv.setItem(45, back);
-        inv.setItem(47, lastPage); //to be used later
+        inv.setItem(47, lastPage);
         inv.setItem(49, createTask);
-        inv.setItem(51, nextPage); //to be used later
+        inv.setItem(51, nextPage);
 
-
-        //set the different tasks
-        for (Task tsk : list.getTasks()) {
-
-            //limit to 45 tasks until I do pages.
-            if (tsk.getUniqueId() < 45) inv.setItem(tsk.getUniqueId(), tsk.getFace());
-        }
+        // display tasks depending on page
+       try {chunks.get(this.page - 1).forEach(task -> inv.setItem(inv.firstEmpty(), task.getFace())); }
+       catch(Exception e){}
 
         return inv;
     }
@@ -144,12 +148,25 @@ public class TasksInventory extends HartInventory {
                     if (clickedTask.isCompleted()) clickedTask.setCompleted(false);
                     else clickedTask.setCompleted(true);
 
+                    //write the task to file
+                    Main.getInstance().getListsFile().getConfig().set(clickedTask.getPath() + ".taskName", clickedTask.getName()); //set task name
+                    Main.getInstance().getListsFile().getConfig().set(clickedTask.getPath() + ".taskItem", clickedTask.getFace()); //set the task face
+                    Main.getInstance().getListsFile().getConfig().set(clickedTask.getPath() + ".completed", clickedTask.isCompleted()); //set the completed boolean
+                    Main.getInstance().getListsFile().getConfig().set(clickedTask.getPath() + ".taskId", clickedTask.getUniqueId()); //set the task id
+                    Main.getInstance().getListsFile().saveConfig();
+
                     player.openInventory(new TasksInventory(list, player).getInventory());
                 } else if (e.getClick().equals(ClickType.MIDDLE)) {//middle clicked
                 } else {//right clicked
                     new DeleteConfim(clickedTask, list, player);
                 }
             }
+        }
+        else if(slot == 47){//last page
+            if (this.page > 1) player.openInventory(this.setPage(this.page - 1).getInventory());
+        }
+        else if(slot == 51){//next page
+            if (this.page >= 1) player.openInventory(this.setPage(this.page + 1).getInventory());
         }
     }
 }

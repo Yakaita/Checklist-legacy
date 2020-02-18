@@ -104,7 +104,7 @@ public class DeleteConfim {
                 })
                 .text("Enter the checklist name")
                 .item(list.getFace())
-                .title("Confirm Checklist Deletion")
+                .title("Confirm List Deletion")
                 .plugin(Main.getInstance())
                 .open(player);
     }

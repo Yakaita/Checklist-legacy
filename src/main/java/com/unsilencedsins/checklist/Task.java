@@ -18,7 +18,7 @@ public class Task {
     private int uniqueId;
     private String path;
 
-    public Task(){
+    public Task() {
         face = new ItemStack(Material.COBBLESTONE);
         name = "";
         completed = false;
@@ -35,15 +35,25 @@ public class Task {
         this.face.setItemMeta(meta);
     }
 
-    public ItemStack getFace() {return face;}
+    public ItemStack getFace() {
+        return face;
+    }
 
-    public void setFace(ItemStack face) {this.face = face;}
+    public void setFace(ItemStack face) {
+        this.face = face;
+    }
 
-    public String getName() {return name;}
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) {this.name = name;}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public boolean isCompleted() {return completed;}
+    public boolean isCompleted() {
+        return completed;
+    }
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
@@ -58,20 +68,28 @@ public class Task {
 
         if (completed) {
             if (!meta.hasEnchants()) meta.addEnchant(Enchantment.DAMAGE_ALL, 5, false);
-            else meta.removeEnchant(Enchantment.DAMAGE_ALL);
-        }
+
+        } else meta.removeEnchant(Enchantment.DAMAGE_ALL);
 
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         face.setItemMeta(meta);
     }
 
-    public int getUniqueId() {return uniqueId;}
+    public int getUniqueId() {
+        return uniqueId;
+    }
 
-    public void setUniqueId(int uniqueId) {this.uniqueId = uniqueId;}
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
-    public String getPath() {return path;}
+    public String getPath() {
+        return path;
+    }
 
-    public void setPath(String path) {this.path = path;}
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public static boolean listHasTasks(Player p, Checklist l) {
         ConfigurationSection sec = Main.getInstance().getListsFile().getConfig().getConfigurationSection("players." +
