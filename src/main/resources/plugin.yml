@@ -9,3 +9,5 @@ commands:
   checklists:
     description: Main command for the Checklists plugin
     aliases: [cl]
+  clv:
+    description: Tells the current downloaded version

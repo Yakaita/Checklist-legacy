@@ -87,7 +87,7 @@ public class Checklist {
 
     public void setLore() {
         //set the lore
-        ArrayList<String> lore = new ArrayList<String>();
+        ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lLeft click&r to open"));
         lore.add(ChatColor.translateAlternateColorCodes('&', "&b&lRight click&r to delete"));
 

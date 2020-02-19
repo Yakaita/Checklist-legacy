@@ -18,6 +18,7 @@ public final class Main extends JavaPlugin {
 
         Bukkit.getServer().getPluginManager().registerEvents(new com.unsilencedsins.checklist.inventories.HartInventoryListener(), this);
         this.getCommand("checklists").setExecutor(new CommandsClass());
+        this.getCommand("clv").setExecutor(new CommandsClass());
     }
 
     public static Main getInstance() {return instance; }

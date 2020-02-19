@@ -23,10 +23,13 @@ public class CommandsClass implements CommandExecutor {
                lists = Checklist.getChecklists(player);
             } else {
                 //they've never done the command before, write the user to the file
-                Main.getInstance().getListsFile().getConfig().set("players", player.getUniqueId().toString());
+                Main.getInstance().getListsFile().getConfig().set("players." + player.getUniqueId().toString(), "lists" );
             }
             //open the inventory
             player.openInventory(new ListsInventory(player, lists).getInventory());
+        }
+        else if (command.getName().equalsIgnoreCase("clv")){
+            player.sendMessage("Current Checklist Version: " + Main.getInstance().getDescription().getVersion());
         }
         return true;
     }
