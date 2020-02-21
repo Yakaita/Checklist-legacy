@@ -16,7 +16,7 @@ public final class Main extends JavaPlugin {
         listsFile = new ConfigWrapper(this, "", "listsFile.yml");
         listsFile.saveConfig();
 
-        Bukkit.getServer().getPluginManager().registerEvents(new com.unsilencedsins.checklist.inventories.HartInventoryListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new HartInventoryListener(), this);
         this.getCommand("checklists").setExecutor(new CommandsClass());
         this.getCommand("clv").setExecutor(new CommandsClass());
     }
