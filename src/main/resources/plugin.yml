@@ -1,13 +1,4 @@
 name: Checklist
 version: ${project.version}
-main: com.unsilencedsins.checklist.Main
+main: me.unsilencedsins.checklist.Core
 api-version: 1.13
-authors: [UnSilencedSins]
-description: Let's players keep a checklist in game.
-
-commands:
-  checklists:
-    description: Main command for the Checklists plugin
-    aliases: [cl]
-  clv:
-    description: Tells the current downloaded version
